@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/SpringBoot-Microservices-tutorial.iml" filepath="$PROJECT_DIR$/.idea/SpringBoot-Microservices-tutorial.iml" />
+      <module fileurl="file://$PROJECT_DIR$/springboot-resful-webservices/springboot-resful-webservices.iml" filepath="$PROJECT_DIR$/springboot-resful-webservices/springboot-resful-webservices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpringBoot-Rest-Api-Basics/springboot-rest-api.iml" filepath="$PROJECT_DIR$/SpringBoot-Rest-Api-Basics/springboot-rest-api.iml" />
+    </modules>
+  </component>
+</project>

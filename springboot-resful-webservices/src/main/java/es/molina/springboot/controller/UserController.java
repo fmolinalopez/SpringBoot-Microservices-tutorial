@@ -3,6 +3,7 @@ package es.molina.springboot.controller;
 import java.net.http.HttpResponse;
 import java.util.List;
 
+import es.molina.springboot.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,31 +30,31 @@ public class UserController {
 	
 	// GET
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable Long id) {
-		final User createdUser = this.userService.getUserById(id);
+	public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+		final UserDto createdUser = this.userService.getUserById(id);
 		
 		return ResponseEntity.ok(createdUser);
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<User>> getAllUsers() {
-		final List<User> users = this.userService.getAllUsers();
+	public ResponseEntity<List<UserDto>> getAllUsers() {
+		final List<UserDto> users = this.userService.getAllUsers();
 		
 		return ResponseEntity.ok(users);
 	}
 	
 	// POST
 	@PostMapping
-	public ResponseEntity<User> createUser(@RequestBody User user) {
-		final User createdUser = this.userService.createUser(user);
+	public ResponseEntity<UserDto> createUser(@RequestBody UserDto user) {
+		final UserDto createdUser = this.userService.createUser(user);
 		
-		return new ResponseEntity<User>(createdUser, HttpStatus.CREATED);
+		return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
 	}
 	
 	// PUT
 	@PutMapping("/update/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-		final User updatedUser = this.userService.updateUser(id, user);
+	public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
+		final UserDto updatedUser = this.userService.updateUser(id, user);
 		
 		return ResponseEntity.ok(updatedUser);
 	}

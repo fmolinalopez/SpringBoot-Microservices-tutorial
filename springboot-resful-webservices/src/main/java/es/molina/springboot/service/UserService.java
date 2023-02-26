@@ -2,17 +2,18 @@ package es.molina.springboot.service;
 
 import java.util.List;
 
+import es.molina.springboot.dto.UserDto;
 import es.molina.springboot.entity.User;
 
 public interface UserService {
 	
-	User createUser(User user);
+	UserDto createUser(UserDto user);
 
-	User getUserById(Long id);
+	UserDto getUserById(Long id);
 	
-	List<User> getAllUsers();
+	List<UserDto> getAllUsers();
 	
-	User updateUser(Long id, User user);
+	UserDto updateUser(Long id, UserDto user);
 	
 	void deleteUser(Long id);
 }

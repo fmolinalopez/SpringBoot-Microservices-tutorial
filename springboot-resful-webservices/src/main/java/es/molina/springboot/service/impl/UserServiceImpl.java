@@ -2,7 +2,10 @@ package es.molina.springboot.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import es.molina.springboot.dto.UserDto;
+import es.molina.springboot.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
 import es.molina.springboot.entity.User;
@@ -17,32 +20,44 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 	
 	@Override
-	public User createUser(User user) {
-		return this.userRepository.save(user);
+	public UserDto createUser(UserDto userDto) {
+
+		// Convert UserDto to User Jpa Entity
+		User user = UserMapper.mapToUser(userDto);
+
+		User savedUser = this.userRepository.save(user);
+
+		// Convert User Jpa Entity to UserDto
+		UserDto savedUserDto = UserMapper.mapToUserDto(savedUser);
+
+		return savedUserDto;
 	}
 
 	@Override
-	public User getUserById(Long id) {
+	public UserDto getUserById(Long id) {
 		Optional<User> optionalUser =  this.userRepository.findById(id);
-		
-		return optionalUser.get();
+
+		return UserMapper.mapToUserDto(optionalUser.get());
 	}
 
 	@Override
-	public List<User> getAllUsers() {
-		return this.userRepository.findAll();
+	public List<UserDto> getAllUsers() {
+		return this.userRepository.findAll().stream()
+				.map(UserMapper::mapToUserDto).collect(Collectors.toList());
 	}
 
 	@Override
-	public User updateUser(Long id, User user) {
+	public UserDto updateUser(Long id, UserDto user) {
 		final Optional<User> userToUpdate = this.userRepository.findById(id);
 		
-		return this.userRepository.save(userToUpdate.get()
+		User updatedUser = this.userRepository.save(userToUpdate.get()
 				.toBuilder()
 				.firstName(user.getFirstName())
 				.lastName(user.getLastName())
 				.email(user.getEmail())
 				.build());
+
+		return UserMapper.mapToUserDto(updatedUser);
 	}
 
 	@Override
