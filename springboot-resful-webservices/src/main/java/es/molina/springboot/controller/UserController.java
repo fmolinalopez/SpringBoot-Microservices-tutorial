@@ -1,10 +1,12 @@
 package es.molina.springboot.controller;
 
+import java.net.http.HttpResponse;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,5 +56,13 @@ public class UserController {
 		final User updatedUser = this.userService.updateUser(id, user);
 		
 		return ResponseEntity.ok(updatedUser);
+	}
+	
+	// DELETE
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+		this.userService.deleteUser(id);
+		
+		return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
 	}
 }
