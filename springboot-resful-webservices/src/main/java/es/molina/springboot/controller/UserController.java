@@ -6,6 +6,7 @@ import java.util.List;
 import es.molina.springboot.dto.UserDto;
 import es.molina.springboot.exception.ErrorDetails;
 import es.molina.springboot.exception.ResourceNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class UserController {
 	
 	// POST
 	@PostMapping
-	public ResponseEntity<UserDto> createUser(@RequestBody UserDto user) {
+	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto user) {
 		final UserDto createdUser = this.userService.createUser(user);
 		
 		return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
@@ -49,7 +50,7 @@ public class UserController {
 	
 	// PUT
 	@PutMapping("/update/{id}")
-	public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
+	public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto user) {
 		final UserDto updatedUser = this.userService.updateUser(id, user);
 		
 		return ResponseEntity.ok(updatedUser);
