@@ -8,7 +8,11 @@ import es.molina.employeeservice.entity.Employee;
 import es.molina.employeeservice.repository.EmployeeRepository;
 import es.molina.employeeservice.service.APIClient;
 import es.molina.employeeservice.service.EmployeeService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,6 +20,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @AllArgsConstructor
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     private EmployeeRepository employeeRepository;
 
@@ -32,7 +38,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+//    @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefatulDepartment")
+    @Retry(name = "${spring.application.name}", fallbackMethod = "getDefatulDepartment")
     public ApiResponseDto getEmployee(Long id) {
+
+        LOGGER.error("inside of getEmployee method");
         EmployeeDto employeeDto = EmployeeBuilder.employeeToEmployeeDto(employeeRepository.findById(id).get());
 
         // RestTemplate
@@ -49,6 +59,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         ApiResponseDto response = new ApiResponseDto();
         response.setEmployee(employeeDto);
         response.setDepartment(departmentDto);
+
+        return response;
+    }
+
+    public ApiResponseDto getDefatulDepartment(Long id, Exception exception) {
+        LOGGER.error("inside of getDefaultDepartment method");
+
+        EmployeeDto employeeDto = EmployeeBuilder.employeeToEmployeeDto(employeeRepository.findById(id).get());
+
+        DepartmentDto defaultDepartment = DepartmentDto.builder()
+                .departmentDescription("DEFAULT")
+                .departmentName("DEFAULT")
+                .departmentCode("DEFAULT")
+                .build();
+
+        ApiResponseDto response = new ApiResponseDto();
+        response.setEmployee(employeeDto);
+        response.setDepartment(defaultDepartment);
 
         return response;
     }
