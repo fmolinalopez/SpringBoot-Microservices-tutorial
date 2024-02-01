@@ -2,6 +2,7 @@ package es.molina.departmentservice.service.impl;
 
 import es.molina.departmentservice.dto.DepartmentDto;
 import es.molina.departmentservice.entity.Department;
+import es.molina.departmentservice.mapper.DepartmentMapper;
 import es.molina.departmentservice.repository.DepartmentRepository;
 import es.molina.departmentservice.service.DepartmentService;
 import lombok.AllArgsConstructor;
@@ -16,28 +17,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentDto saveDepartment(DepartmentDto departmentDto) {
 
-        Department department = new Department(
-                departmentDto.getId(),
-                departmentDto.getDepartmentName(),
-                departmentDto.getDepartmentDescription(),
-                departmentDto.getDepartmentCode());
-
-        Department savedDepartment = departmentRepository.save(department);
-
-        DepartmentDto savedDepartmentDto = new DepartmentDto(
-                savedDepartment.getId(),
-                savedDepartment.getDepartmentName(),
-                savedDepartment.getDepartmentDescription(),
-                savedDepartment.getDepartmentCode());
-
-        return savedDepartmentDto;
+        return DepartmentMapper.matToDepartmentDto(
+                departmentRepository.save(DepartmentMapper.mapToDepartment(departmentDto)));
     }
 
     @Override
     public DepartmentDto getDepartment(Long id) {
-        Department department = departmentRepository.findById(id).get();
-
-        return new DepartmentDto(department.getId(), department.getDepartmentName(),
-                department.getDepartmentDescription(), department.getDepartmentCode());
+        return DepartmentMapper.matToDepartmentDto(
+                departmentRepository.findById(id).get());
     }
 }

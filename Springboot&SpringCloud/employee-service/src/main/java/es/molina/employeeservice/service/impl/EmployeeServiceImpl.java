@@ -1,14 +1,12 @@
 package es.molina.employeeservice.service.impl;
 
-import es.molina.employeeservice.builder.EmployeeBuilder;
 import es.molina.employeeservice.dto.ApiResponseDto;
 import es.molina.employeeservice.dto.DepartmentDto;
 import es.molina.employeeservice.dto.EmployeeDto;
-import es.molina.employeeservice.entity.Employee;
+import es.molina.employeeservice.mapper.EmployeeMapper;
 import es.molina.employeeservice.repository.EmployeeRepository;
 import es.molina.employeeservice.service.APIClient;
 import es.molina.employeeservice.service.EmployeeService;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -33,8 +31,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
-        return EmployeeBuilder.employeeToEmployeeDto(
-                employeeRepository.save(EmployeeBuilder.employeeDtoToEmployee(employeeDto)));
+        return EmployeeMapper.mapToEmployeeDto(
+                employeeRepository.save(EmployeeMapper.mapToEmployee(employeeDto)));
     }
 
     @Override
@@ -43,7 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public ApiResponseDto getEmployee(Long id) {
 
         LOGGER.error("inside of getEmployee method");
-        EmployeeDto employeeDto = EmployeeBuilder.employeeToEmployeeDto(employeeRepository.findById(id).get());
+        EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employeeRepository.findById(id).get());
 
         // RestTemplate
 //        DepartmentDto departmentDto = restTemplate.getForEntity("http://localhost:8080/api/departments/" + employeeDto.getDepartmentId(),
@@ -66,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public ApiResponseDto getDefatulDepartment(Long id, Exception exception) {
         LOGGER.error("inside of getDefaultDepartment method");
 
-        EmployeeDto employeeDto = EmployeeBuilder.employeeToEmployeeDto(employeeRepository.findById(id).get());
+        EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employeeRepository.findById(id).get());
 
         DepartmentDto defaultDepartment = DepartmentDto.builder()
                 .departmentDescription("DEFAULT")
