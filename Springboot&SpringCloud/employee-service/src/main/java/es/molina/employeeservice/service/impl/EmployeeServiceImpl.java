@@ -3,10 +3,12 @@ package es.molina.employeeservice.service.impl;
 import es.molina.employeeservice.dto.ApiResponseDto;
 import es.molina.employeeservice.dto.DepartmentDto;
 import es.molina.employeeservice.dto.EmployeeDto;
+import es.molina.employeeservice.dto.OrganizationDto;
 import es.molina.employeeservice.mapper.EmployeeMapper;
 import es.molina.employeeservice.repository.EmployeeRepository;
 import es.molina.employeeservice.service.APIClient;
 import es.molina.employeeservice.service.EmployeeService;
+import es.molina.employeeservice.service.OrganizationAPIClient;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -29,6 +31,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private APIClient apiClient;
 
+    private OrganizationAPIClient organizationAPIClient;
+
     @Override
     public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
         return EmployeeMapper.mapToEmployeeDto(
@@ -37,7 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
 //    @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefatulDepartment")
-    @Retry(name = "${spring.application.name}", fallbackMethod = "getDefatulDepartment")
+//    @Retry(name = "${spring.application.name}", fallbackMethod = "getDefatulDepartment")
     public ApiResponseDto getEmployee(Long id) {
 
         LOGGER.error("inside of getEmployee method");
@@ -53,10 +57,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 //                .bodyToMono(DepartmentDto.class)
 //                .block();
         DepartmentDto departmentDto = apiClient.getDepartment(employeeDto.getDepartmentId());
+        OrganizationDto organizationDto = organizationAPIClient.getOrganization(employeeDto.getOrganizationId());
 
         ApiResponseDto response = new ApiResponseDto();
         response.setEmployee(employeeDto);
         response.setDepartment(departmentDto);
+        response.setOrganization(organizationDto);
 
         return response;
     }

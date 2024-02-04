@@ -26,4 +26,6 @@ public class Employee {
     private String email;
 
     private Long departmentId;
+
+    private Long organizationId;
 }
